@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Post</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+            :root {
+                --primary-color: #0d6efd;
+                --secondary-color: #6c757d;
+            }
+            
+            body {
+                background-color: #f8f9fa;
+                color: #212529;
+            }
+            
+            .navbar-brand {
+                font-weight: 700;
+            }
+            
+            .card {
+                border: none;
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
+                transition: transform 0.3s ease;
+            }
+            
+            .card:hover {
+                transform: translateY(-5px);
+            }
+            
+            .btn-primary {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+            
+            .btn-outline-primary {
+                color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+            
+            .btn-outline-primary:hover {
+                background-color: var(--primary-color);
+            }
+            
+            footer {
+                background-color: #212529;
+                color: white;
+            }
+        </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title">Create New Post</h2>
+            <form action="/Post/Add" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title" value="Title" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="5" placeholder="Enter Content" required>Content</textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="creator" class="form-label">Author Name</label>
+                        <input type="text" class="form-control" id="creator" name="creator" placeholder="Enter Author Name" value="Creator" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="comment" class="form-label">Comment</label>
+                        <input type="text" class="form-control" id="comment" name="comment" placeholder="Enter Comment" value="Comment">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">Upload Images</label>
+                    <div class="file-upload">
+                        <input type="file" class="form-control" name="image" multiple>
+                        <small class="text-muted">You can upload multiple files</small>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Add Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</html>
