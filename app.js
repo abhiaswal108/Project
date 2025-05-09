@@ -7,7 +7,7 @@ const mongoStore=require('connect-mongo')
 const session=require('express-session')
 const postRoute=require('./route/postRoute')
 const userRouter = require('./route/AuthRoute');
-
+const commentRoute = require("./route/commentRoute");
 app.use(express.urlencoded({extended:true}))
 app.set("view engine","ejs")
 
@@ -24,6 +24,7 @@ app.use(
     })
   );
   const passport = require('passport');
+
   require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -44,6 +45,7 @@ const connectDB = async () => {
 
 app.use('/auth',userRouter)
 app.use('/Post',postRoute)
+app.use('/',commentRoute)
 app.get('/',(req,res)=>{
   res.render("home",{
 title:"Home",

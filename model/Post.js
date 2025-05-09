@@ -10,7 +10,7 @@ author:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Users"
 },
-profilePic:[{
+images:[{
     url:{
         type:String
     },
@@ -22,6 +22,7 @@ comment:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Comments"
 }],
+createdAt: { type: Date, default: Date.now }, 
 })
 
 const Post=mongoose.model("Posts",postSchema)
