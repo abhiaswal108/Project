@@ -1,11 +1,11 @@
 const express=require("express")
-const userRoute=express.Router()
+const authRoute=express.Router()
 const User=require('../model/User')
 const {getLogin,getRegister,postLogin,postRegister,logout}=require('../controller/authController')
 
-userRoute.get('/login',getLogin)
-userRoute.post("/register",postRegister)
-userRoute.get("/register",getRegister)
-userRoute.post("/login",postLogin)
-userRoute.get("/logout",logout)
-module.exports = userRoute; 
+authRoute.get('/login',getLogin)
+authRoute.post("/register",postRegister)
+authRoute.get("/register",getRegister)
+authRoute.post("/login",postLogin)
+authRoute.get("/logout",logout)
+module.exports = authRoute; 

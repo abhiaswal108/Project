@@ -55,7 +55,7 @@ exports.postLogin = (req, res, next) => {
             templateVars.error = 'Login session error';
             return res.render('login', templateVars);
           }
-          return res.redirect('/');
+          return res.redirect('/user/profile');
         });
   
       } catch (error) {  // This is properly defined

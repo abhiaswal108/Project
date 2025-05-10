@@ -1,0 +1,39 @@
+<%- include('./partials/header', { title: 'Edit' }); %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Edit post</h1>
+    <form action="/post/<%=post._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" id=" title" class="form-control" value="<%= post.title %>">
+
+        </div>
+             <div class="form-group">
+            <label for="content">Content</label>
+            <input type="text" name="content" id=" content" class="form-control" value="<%= post.content %>">
+            
+        </div>
+           <div>
+<% post?.images.forEach((image)=>{%>
+  <img src="<%= image.url%>" alt="image">
+<%})%>
+
+           </div>
+    <div class="mb-4">
+                    <label class="form-label">Upload Images</label>
+                    <div class="file-upload">
+                        <input type="file" class="form-control" name="image" multiple>
+                        <small class="text-muted">You can upload multiple files</small>
+                    </div>
+                </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</body>
+</html>
+<%- include('partials/footer') %>

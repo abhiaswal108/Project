@@ -1,30 +1,173 @@
 <%- include('./partials/header', { title: 'Post' }); %>
-<h1><%= post?.title%></h1>
-
-<h1><%= post?.content%></h1>
-<p>by <%= post.author?.username|| "Unknown" %> on <%= post.createdAt?.toDateString()||"2025" %>
-<%post?.images?.forEach((image)=>{%>
-
-    <div>
-        <img src="<%=image.url%>">
-
-    </div>
-<%})
-    %>
-    <!--Check login user is owner-->
-    <% if(user?._id.toString() == post?.author?._id.toString()) { %>
-  
-        <div>
-            <a href="/post/<%=post?._id%>/delete">Delete</a>
-            <a href="/post/<%=post?._id%>/edit">Edit</a>
+<div class="post-container">
+    <h1 class="post-title"><%= post?.title %></h1>
+    <div class="post-content"><%= post?.content %></div>
+    <p class="post-meta">by <%= post.author?.username || "Unknown" %> on <%= post.createdAt?.toDateString() || "2025" %></p>
+    
+    <% if(post?.images?.length) { %>
+        <div class="post-images">
+            <% post.images.forEach((image) => { %>
+                <div class="image-wrapper">
+                    <img src="<%= image.url %>" class="post-image" alt="Post image">
+                </div>
+            <% }) %>
         </div>
-    <%}%>
-<div>
-    <h3>Comment</h3>
-    <form action="/post/<%= post?._id%>/comment" method="post">
-        <input type="text" name="content"/>
-           <input type="submit" name="Comment"/>
-    </form>
+    <% } %>
+
+    <% if(user?._id.toString() == post?.author?._id.toString()) { %>
+        <div class="post-actions">
+        
+            <a href="/post/<%= post._id %>/edit" class="btn btn-edit">Edit</a>
+            <form action="/post/<%= post._id %>?_method=DELETE" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i>Delete Post
+                </button>
+            </form>
+        </div>
+    <% } %>
+    <!--comment list-->
+<!--comment list-->
+<% if(post?.comment?.length > 0) { %>
+    <% post.comment.forEach((comment) => { %>
+        <div class="comment">
+            <div class="comment-header">
+                      <small><%=comment?.author?.username %></small>
+        
+            </div>
+            <div class="comment-body">
+                <p><%= comment?.content %></p>
+            </div>
+            <% if(user && comment.author && user._id.equals(comment.author._id)) { %>
+                <div class="comment-actions">
+                    <form action="/comment/<%= comment._id %>/edit" method="GET" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </form>
+                    <form action="/comment/<%= comment._id %>?_method=DELETE" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            <% } %>
+        </div>
+    <% }) %>
+<% } else { %>
+    <p>No Comments Here</p>
+<% } %>
+
+<!--Comment Form-->
+    <div class="comment-section">
+        <h3>Comments</h3>
+        <% if(user){%>
+<form action="/post/<%= post?._id %>/comment" method="post" class="comment-form">
+            <textarea name="content" class="comment-input" placeholder="Write your comment..."></textarea>
+            <button type="submit" class="btn btn-comment">Post Comment</button>
+        </form>
+       <%}else{%>
+<p>Please <a href='/auth/login'>Login</a> to comment</p>
+        <%}%>
+    </div>
 </div>
+
+<style>
+    /* Post container styling */
+    .post-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Post title styling */
+    .post-title {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    /* Post content styling */
+    .post-content {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    /* Post meta info (author, date) */
+    .post-meta {
+        color: #666;
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+
+    /* Image styling */
+    .post-images {
+        margin: 20px 0;
+    }
+
+    .image-wrapper {
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .post-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 500px; /* Adjust this value as needed */
+        object-fit: contain; /* Ensures image maintains aspect ratio */
+    }
+
+    /* Action buttons */
+    .post-actions {
+        margin: 20px 0;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-edit {
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Comment section */
+    .comment-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .comment-form {
+        margin-top: 15px;
+    }
+
+    .comment-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        min-height: 80px;
+        margin-bottom: 10px;
+    }
+
+    .btn-comment {
+        background-color: #28a745;
+        color: white;
+    }
+</style>
 
 <%- include('partials/footer') %>

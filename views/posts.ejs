@@ -1,19 +1,197 @@
 <%- include('./partials/header', { title: 'POST' }); %>
-<h1>POST</h1>
-<% if(posts?.length > 0) { %>
-    <% posts.forEach(post => { %>
-        <div>
-        <% if(post.images && post.images.length > 0) { %>
-    <p>DEBUG: Image URL is: <%= post.images[0].url %></p>
-    <img src="<%= post.images[0].url %>" alt="Post image"/>
-<% } %>
-            <h2><%= post.title %></h2>
-            <p><%= post.content %></p>
-            <p>by <%= post.author?.username || "Unknown" %> on <%= post.createdAt?.toDateString() || "2025" %></p>
-            <a href="/post/<%= post._id %>">Read More</a>
+
+<div class="posts-container">
+    <h1 class="page-title">POSTS</h1>
+    
+    <% if(posts?.length > 0) { %>
+        <div class="posts-grid">
+            <% posts.forEach(post => { %>
+                <div class="post-card">
+                    <% if(post.images && post.images.length > 0) { %>
+                        <div class="post-image-container">
+                            <img src="<%= post.images[0].url %>" alt="Post image" class="post-image"/>
+                        </div>
+                    <% } %>
+                    <div class="post-content">
+                        <h2 class="post-title"><%= post.title %></h2>
+                        <p class="post-excerpt"><%= post.content.length > 150 ? post.content.substring(0, 150) + '...' : post.content %></p>
+                        <div class="post-meta">
+                            <span class="post-author">by <%= post.author?.username || "Unknown" %></span>
+                            <span class="post-date"><%= post.createdAt?.toDateString() || "2025" %></span>
+                        </div>
+                        <a href="/post/<%= post._id %>" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            <% }) %>
         </div>
-    <% }) %>
-<% } else { %>
-    <p>No Post found</p>
-<% } %>
+    <% } else { %>
+        <div class="no-posts">
+            <p>No posts found</p>
+            <a href="/post/new" class="create-post-btn">Create Your First Post</a>
+        </div>
+    <% } %>
+</div>
+
+<style>
+    /* Base Styles */
+    :root {
+        --primary-color: #3498db;
+        --secondary-color: #2ecc71;
+        --dark-color: #2c3e50;
+        --light-color: #ecf0f1;
+        --text-color: #333;
+        --text-light: #7f8c8d;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .posts-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .page-title {
+        text-align: center;
+        color: var(--dark-color);
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    .page-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: var(--primary-color);
+    }
+    
+    /* Posts Grid */
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    
+    .post-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Post Image */
+    .post-image-container {
+        height: 200px;
+        overflow: hidden;
+    }
+    
+    .post-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .post-card:hover .post-image {
+        transform: scale(1.05);
+    }
+    
+    /* Post Content */
+    .post-content {
+        padding: 1.5rem;
+    }
+    
+    .post-title {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+        color: var(--dark-color);
+    }
+    
+    .post-excerpt {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+    
+    .post-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+    }
+    
+    /* Read More Link */
+    .read-more {
+        display: inline-block;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+    
+    .read-more:hover {
+        color: var(--secondary-color);
+    }
+    
+    /* No Posts Styling */
+    .no-posts {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .no-posts p {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .create-post-btn {
+        display: inline-block;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.3s ease;
+    }
+    
+    .create-post-btn:hover {
+        background: var(--dark-color);
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .posts-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
 <%- include('partials/footer') %>

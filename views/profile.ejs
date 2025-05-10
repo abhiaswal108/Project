@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <% if(user?.profilePic?.url) { %>
+        <img src="<%= user.profilePic.url %>" alt="<%= user.username %>" width="300" height="300">
+    <% } else { %>
+        <img src="../images/CustomUser.png" alt="Default pic" width="300" height="300">
+    <% } %>
+
+    <h2><%= user.username %></h2>
+    <h2><%= user.email %></h2>
+    <p>
+        Date Joined: <%= user.timestamp.toDateString() %>
+    </p>
+
+<p>Number Of Posts: <%=postCount%></p>
+
+
+
+                <a href="/user/edit" class="btn btn-primary btn-block">Edit Profile</a>
+                    <form action="/user/delete" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash-alt"></i> Delete Account
+                        </button>
+                    </form>
+ 
+</body>
+</html>

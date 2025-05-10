@@ -10,8 +10,9 @@ password:{
     type:String
 },
 profilePic:{
-    type:String,
-    public_id:String
+    type:Object,
+    public_id:String,
+    url:String
 },
 bio:{
     type:String

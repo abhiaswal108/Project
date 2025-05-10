@@ -6,8 +6,10 @@ require('dotenv').config();
 const mongoStore=require('connect-mongo')
 const session=require('express-session')
 const postRoute=require('./route/postRoute')
-const userRouter = require('./route/AuthRoute');
+const authRouter = require('./route/AuthRoute');
 const commentRoute = require("./route/commentRoute");
+const userRoute = require("./route/UserRoute");
+const methodOverride=require('method-override')
 app.use(express.urlencoded({extended:true}))
 app.set("view engine","ejs")
 
@@ -23,7 +25,9 @@ app.use(
 
     })
   );
+  app.use(methodOverride('_method'))
   const passport = require('passport');
+
 
   require('./config/passport')(passport);
 app.use(passport.initialize());
@@ -43,9 +47,10 @@ const connectDB = async () => {
   };
   
 
-app.use('/auth',userRouter)
+app.use('/auth',authRouter)
 app.use('/Post',postRoute)
 app.use('/',commentRoute)
+app.use('/user',userRoute)
 app.get('/',(req,res)=>{
   res.render("home",{
 title:"Home",
