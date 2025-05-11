@@ -2,7 +2,7 @@ const Post = require("../model/Post")
 const User = require("../model/User")
 const cloudinary = require('../config/cloudinary');
 const File = require("../model/File");
-
+const Comment=require("../model/Comment")
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
@@ -59,6 +59,7 @@ exports.updateUser = async (req, res) => {
         if (!user) {
             return res.render("login", {
                 title: "Login",
+
                 error: 'User not found',
                 success: ''
             });
@@ -105,32 +106,41 @@ exports.updateUser = async (req, res) => {
     }
 };
 // Delete comment
-exports.deleteComment = async (req, res) => {
+exports.deleteUser = async (req, res) => {
     try {
-        const comment = await Comment.findById(req.params.id);
-          if (!comment) {
-            return res.render("postDetail", {
-                title: "Post",
+        const user = await User.findById(req.user._id);
+          if (!user) {
+            return res.render("login", {
+                title: "login",
                comment,
                 user: req.user,
-                error: 'Post not found',
+                error: 'User not found',
                 success: ''
             });
         }
-              if (comment.author.toString() !== req.user._id.toString()) {
-            return res.render("postDetail", {
-                title: "Post",
-               comment,
-                user: req.user,
-                error: 'You are not authorized to edit',
-                success: ''
-            });
+          
+
+        if(user.profilePic&&user.profilePic.public_id){
+            await cloudinary.uploader.destroy(user.profilePic.public_id)
+        }
+        const post=await Post.find({author:req.user_id});
+        for(const post of post){
+            for (const image of post.image){
+                await cloudinary.uploader.destroy(image.public_id)
+            }
+            await Comment.deleteMany({post:post._id})
+            await Post.findByIdAndDelete(post._id)
         }
 
         
   
-await Comment.findByIdAndDelete(req.params.id)
-        res.redirect(`/post/${comment.post}`)
+await Comment.deleteMany({author:req.user_id})
+const file=await File.find({uploadedBy:req.user._id})
+for(const file of file){
+    await cloudinary.uploader.destroy(file.public_id)
+}
+await User.findByIdAndDelete(req.user._id)
+        res.redirect(`/auth/register`)
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
