@@ -109,38 +109,47 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
-          if (!user) {
+        if (!user) {
             return res.render("login", {
                 title: "login",
-               comment,
+                comment,
                 user: req.user,
                 error: 'User not found',
                 success: ''
             });
         }
-          
 
-        if(user.profilePic&&user.profilePic.public_id){
-            await cloudinary.uploader.destroy(user.profilePic.public_id)
+        // Delete profile picture if exists
+        if(user.profilePic && user.profilePic.public_id){
+            await cloudinary.uploader.destroy(user.profilePic.public_id);
         }
-        const post=await Post.find({author:req.user_id});
-        for(const post of post){
-            for (const image of post.image){
-                await cloudinary.uploader.destroy(image.public_id)
+
+        // Delete user's posts and associated images/comments
+        const posts = await Post.find({author: req.user._id}); // Fixed typo here
+        for(const post of posts){
+            for (const image of post.images){ // Make sure this matches your schema (image vs images)
+                await cloudinary.uploader.destroy(image.public_id);
             }
-            await Comment.deleteMany({post:post._id})
-            await Post.findByIdAndDelete(post._id)
+            await Comment.deleteMany({post: post._id});
+            await Post.findByIdAndDelete(post._id);
         }
+
+        // Delete user's comments
+        await Comment.deleteMany({author: req.user._id});
+        
+        // Delete user's files
+        const files = await File.find({uploadedBy: req.user._id});
+        for(const file of files){
+            await cloudinary.uploader.destroy(file.public_id);
+        }
+        
+        // Finally delete the user
+        await User.findByIdAndDelete(req.user._id);
+        
+        // Clear session/cookie if needed
 
         
-  
-await Comment.deleteMany({author:req.user_id})
-const file=await File.find({uploadedBy:req.user._id})
-for(const file of file){
-    await cloudinary.uploader.destroy(file.public_id)
-}
-await User.findByIdAndDelete(req.user._id)
-        res.redirect(`/auth/register`)
+        res.redirect('/auth/register');
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });

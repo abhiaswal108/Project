@@ -24,11 +24,12 @@
 
 
                 <a href="/user/edit" class="btn btn-primary btn-block">Edit Profile</a>
-                    <form action="/user/delete" method="POST" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                            <i class="fas fa-trash-alt"></i> Delete Account
-                        </button>
-                    </form>
+              <form action="/user/delete" method="POST" class="d-inline">
+
+    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">
+        <i class="fas fa-trash-alt"></i> Delete Account
+    </button>
+</form>
  
 </body>
 </html>
